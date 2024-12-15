@@ -3,7 +3,7 @@ import React from 'react';
 
 const Hero = () => {
   return (
-    <div className="px-4 md:px-12 lg:px-16 xl:px-20 mx-auto pt-10">
+    <div className="md:px-12 lg:px-16 xl:px-20 mx-auto pt-10">
       <div className="bg-gray-100 flex flex-col-reverse md:flex-row items-center p-6 md:p-12 lg:p-16 border-t-2 border-gray-200">
         <div className="flex-1 text-center md:text-left">
           <h2 className="text-sm text-gray-500 uppercase">Welcome to Chairly</h2>
@@ -27,7 +27,7 @@ const Hero = () => {
           />
         </div>
       </div>
-    </div>
+      </div>
   );
 };
 

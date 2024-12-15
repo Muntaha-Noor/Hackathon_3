@@ -4,6 +4,7 @@ import Image from "next/image";
 import React from "react";
 import { useRouter } from "next/navigation";
 import FeaturedProducts from "./featuredProduct";
+import { CiShoppingCart } from "react-icons/ci";
 
 const LibraryStool: React.FC = () => {
   const router = useRouter();
@@ -31,10 +32,10 @@ const LibraryStool: React.FC = () => {
               Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam tincidunt erat enim.
             </p>
             <button
-              className="mt-6 bg-teal-500 hover:bg-teal-600 text-white py-2 w-40 px-4 rounded-lg"
+              className="mt-6 bg-primary hover:bg-teal-600 flex items-center text-white py-2 w-40 px-4 rounded-lg"
               onClick={() => router.push("/card")}
             >
-              Add To Cart
+            <CiShoppingCart className="text-white text-3xl pr-2" />  Add To Cart
             </button>
           </div>
         </div>

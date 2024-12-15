@@ -83,10 +83,10 @@ const Product: React.FC = () => {
   ];
 
   return (
-    <div>
-      <div className="px-4 sm:px-6 md:px-8 lg:px-12 py-12 mx-auto">
+    <div className="px-4 lg:px-[150px] mx-auto">
+      <div className="sm:px-6 md:px-8 py-12 mx-auto">
         <h2 className="text-center text-2xl font-semibold mb-8">All Products</h2>
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-4 gap-6">
           {products.map((product, index) => (
             <div
               key={index}
@@ -125,7 +125,7 @@ const Product: React.FC = () => {
                   </div>
                 </div>
                 <div className="pb-2">
-                  <CiShoppingCart className="hover:text-white hover:bg-primary text-black font-semibold text-4xl cursor-pointer transition-colors" />
+                  <CiShoppingCart className="hover:text-white hover:bg-primary text-black font-semibold text-3xl rounded cursor-pointer transition-colors" />
                 </div>
               </div>
             </div>

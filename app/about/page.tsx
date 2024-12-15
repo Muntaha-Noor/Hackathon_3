@@ -3,14 +3,14 @@ import { FaLightbulb, FaStar, FaShoppingCart, FaGlobe } from 'react-icons/fa';
 
 export default function About() {
   return (
-    <div className="px-4 md:px-[150px] mx-auto">
+    <div className="px-4 md:px-[150px] mx-auto mt-6">
       <section className="flex flex-col md:flex-row items-center gap-8 mb-16">
         <div className="bg-primary w-full md:w-[700px] h-[500px] p-8 md:p-20 flex flex-col justify-between">
           <h2 className="text-3xl md:text-4xl text-white font-bold mb-4">About Us - Comforty</h2>
           <p className="text-white text-sm md:text-base">
             At Comforty, we believe that the right chair can transform your space and elevate your comfort. Specializing in ergonomic design, premium materials, and modern aesthetics, we craft chairs that seamlessly blend style with functionality.
           </p>
-          <button className="mt-6 md:mt-36 px-4 py-2 bg-teal-600 text-white rounded">View Collection</button>
+          <button className="mt-6 md:mt-36 px-4 w-36 py-2 bg-teal-600 text-white rounded">View Collection</button>
         </div>
         <div className="w-full md:w-1/2">
           <Image
@@ -63,14 +63,14 @@ export default function About() {
           {[
             { name: 'The Popular Sofa', price: '$899.00', img: '/sofa.jpeg', width: 630, height: 375 },
             { name: 'The Dandy Chair', price: '$199.00', img: '/photo1.png', width: 305, height: 375 },
-            { name: 'The Dandy Chair', price: '$99.00', img: '/photo2.png', width: 305, height: 375 },
+            { name: 'The Dandy Chair', price: '$99.00', img: '/photo2.png', width: 305, height: 200 },
           ].map((product, index) => (
             <div key={index} className="p-4 shadow-sm text-left bg-white rounded-md">
               <Image
                 src={product.img} 
                 alt={product.name}
                 width={product.width} 
-                height={200} 
+                height={product.height} 
                 className="rounded-md object-cover"
               />
               <h3 className="mt-4 text-lg font-medium">{product.name}</h3>
