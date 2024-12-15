@@ -62,8 +62,8 @@ export default function About() {
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
           {[
             { name: 'The Popular Sofa', price: '$899.00', img: '/sofa.jpeg', width: 630, height: 375 },
-            { name: 'The Dandy Chair', price: '$199.00', img: '/photo1.png', width: 305, height: 375 },
-            { name: 'The Dandy Chair', price: '$99.00', img: '/photo2.png', width: 305, height: 200 },
+            { name: 'The Dandy Chair', price: '$199.00', img: '/Photo1.png', width: 305, height: 375 },
+            { name: 'The Dandy Chair', price: '$99.00', img: '/Photo2.png', width: 305, height: 200 },
           ].map((product, index) => (
             <div key={index} className="p-4 shadow-sm text-left bg-white rounded-md">
               <Image

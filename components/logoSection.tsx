@@ -8,13 +8,13 @@ type Logo = {
 
 const LogoSection: React.FC = () => {
   const logos: Logo[] = [
-    { src: '/logo1.png', alt: 'Logo 1' },
-    { src: '/logo2.png', alt: 'Logo 2' },
-    { src: '/logo3.png', alt: 'Logo 3' },
-    { src: '/logo4.png', alt: 'Logo 4' },
-    { src: '/logo5.png', alt: 'Logo 5' },
-    { src: '/logo6.png', alt: 'Logo 6' },
-    { src: '/logo7.png', alt: 'Logo 7' },
+    { src: '/Logo1.png', alt: 'Logo 1' },
+    { src: '/Logo2.png', alt: 'Logo 2' },
+    { src: '/Logo3.png', alt: 'Logo 3' },
+    { src: '/Logo4.png', alt: 'Logo 4' },
+    { src: '/Logo5.png', alt: 'Logo 5' },
+    { src: '/Logo6.png', alt: 'Logo 6' },
+    { src: '/Logo7.png', alt: 'Logo 7' },
   ];
 
   return (

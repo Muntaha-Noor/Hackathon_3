@@ -8,7 +8,7 @@ const ProductStyle = () => {
         <div className="flex flex-col items-center">
           <div className="mt-6">
             <Image
-              src="/Product3.png"
+              src="/product3.png"
               alt="Large Chair"
               width={550}
               height={500}
