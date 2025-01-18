@@ -1,7 +1,33 @@
+"use client";
 import Image from "next/image";
-import React from "react";
+import React, { useState, useEffect } from "react";
+import { client } from "@/sanity/lib/client";
+
+interface Product {
+  _id: string;
+  title: string;
+  imageUrl: string;
+}
 
 const ProductSection: React.FC = () => {
+  const [products, setProducts] = useState<Product[]>([]); 
+
+  useEffect(() => {
+    const fetchProducts = async () => {
+      const query = `
+        *[_type == "products"][1...7] {
+          _id,
+          title,
+          "imageUrl": image.asset->url
+        }
+      `;
+      const sanityProducts: Product[] = await client.fetch(query);
+      setProducts(sanityProducts);
+    };
+
+    fetchProducts();
+  }, []);
+
   return (
     <div className="bg-gray-100 min-h-screen flex flex-col items-center justify-center px-4 py-8">
       <div className="text-center mb-12">
@@ -28,23 +54,20 @@ const ProductSection: React.FC = () => {
           Follow Products And Discounts On Instagram
         </h2>
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-6 justify-items-center">
-          {[ 
-            "/chair1.png",
-            "/chair2.png",
-            "/chair3.png",
-            "/chair4.png",
-            "/product1.png",
-            "/product2.png",
-          ].map((src, index) => (
-            <Image
-              key={index}
-              src={src}
-              height={112}
-              width={112}
-              alt={`Product ${index + 1}`}
-              className="rounded-lg shadow-md w-full"
-            />
-          ))}
+          {products.length > 0 ? (
+            products.map((product) => (
+              <Image
+                key={product._id}
+                src={product.imageUrl}
+                height={112}
+                width={112}
+                alt={product.title || "Product"}
+                className="rounded-lg shadow-md w-full"
+              />
+            ))
+          ) : (
+            <p className="text-gray-500 text-lg">No products available.</p>
+          )}
         </div>
       </div>
     </div>

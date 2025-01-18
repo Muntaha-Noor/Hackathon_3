@@ -1,32 +1,54 @@
+"use client"
 import { CiShoppingCart } from "react-icons/ci";
 import Image from "next/image";
+import { useEffect, useState } from "react";
+import { client } from "@/sanity/lib/client";
+
+interface Product {
+  _id: string;
+  title: string;
+  price: number;
+  priceWithoutDiscount: number | null;
+  imageUrl: string;
+  description: string;
+  badge: string | null;
+  tags: string[];
+}
 
 const FeaturedProducts = () => {
-  const products = [
-    {
-      image: "/product1.png",
-      title: "Library Stool Chair",
-      price: "20",
-      badge: { label: "New", color: "green" },
-    },
-    {
-      image: "/product2.png",
-      title: "Library Stool Chair",
-      price: "20",
-      originalPrice: "30",
-      badge: { label: "Sale", color: "red" },
-    },
-    {
-      image: "/product3.png",
-      title: "Library Stool Chair",
-      price: "20",
-    },
-    {
-      image: "/product4.png",
-      title: "Library Stool Chair",
-      price: "20",
-    },
-  ];
+  const [products, setProducts] = useState<Product[]>([]);
+  const [loading, setLoading] = useState(true); 
+
+  useEffect(() => {
+    const fetchFeaturedProducts = async () => {
+      try {
+        const query = `*[_type == "products" && "featured" in tags][0...4] {
+          _id,
+          title,
+          price,
+          priceWithoutDiscount,
+          badge,
+          "imageUrl": image.asset->url,
+          description,
+          tags
+        }`;
+
+        const fetchedProducts: Product[] = await client.fetch(query);
+        setProducts(fetchedProducts);
+        console.log(fetchedProducts);
+        setLoading(false); 
+      } catch (error) {
+        console.error("Error fetching featured products:", error);
+        setLoading(false); 
+      }
+    };
+
+    fetchFeaturedProducts();
+  }, []);
+
+  if (loading) {
+    return <div className="text-center py-10">Loading Featured Products...</div>; 
+  }
 
   return (
     <div className="px-4 lg:px-32 mx-auto">
@@ -35,13 +57,13 @@ const FeaturedProducts = () => {
           Featured Products
         </h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-          {products.map((product, index) => (
+          {products.map((product) => (
             <div
-              key={index}
+              key={product._id}
               className="relative bg-white shadow-lg p-4 rounded-md hover:shadow-xl transition-shadow"
             >
               <Image
-                src={product.image}
+                src={product.imageUrl}
                 alt={product.title}
                 width={312}
                 height={312}
@@ -49,17 +71,20 @@ const FeaturedProducts = () => {
               />
               <h3 className="text-lg font-bold mt-2">{product.title}</h3>
               <p className="text-black font-bold">${product.price}</p>
-              {product.originalPrice && (
+              {product.priceWithoutDiscount && (
                 <p className="text-gray-400 line-through">
-                  ${product.originalPrice}
+                  ${product.priceWithoutDiscount}
                 </p>
               )}
               {product.badge && (
                 <span
                   className="absolute top-2 left-2 px-2 py-1 text-white text-xs font-bold rounded"
-                  style={{ backgroundColor: product.badge.color }}
+                  style={{
+                    backgroundColor:
+                      product.badge === "New" ? "green" : product.badge === "Sale" ? "red" : "gray",
+                  }}
                 >
-                  {product.badge.label}
+                  {product.badge}
                 </span>
               )}
               <div className="absolute bottom-2 right-2">

@@ -1,69 +1,47 @@
-"use client"
+"use client";
 import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import { CiShoppingCart } from "react-icons/ci";
+import { client } from "@/sanity/lib/client";
+
+// Define Product type
+interface Product {
+  _id: string;
+  title: string;
+  price: number;
+  originalPrice?: number;
+  imageUrl: string;
+  label?: string;
+  labelColor?: string;
+}
 
 const ProductList: React.FC = () => {
-  const [isClient, setIsClient] = useState(false);
+  const [products, setProducts] = useState<Product[]>([]);
 
   useEffect(() => {
-    setIsClient(true);
+    const fetchProducts = async () => {
+      try {
+        const query = `*[_type == "products"][1...9] {
+          _id,
+          title,
+          price,
+          originalPrice,
+          "imageUrl": image.asset->url,
+          label,
+          labelColor
+        }`;
+        
+        const fetchedProducts: Product[] = await client.fetch(query);
+        setProducts(fetchedProducts);
+      } catch (error) {
+        console.error("Error fetching products:", error);
+      }
+    };
+
+    fetchProducts();
   }, []);
 
-  const products = [
-    {
-      src: "/product1.png",
-      alt: "Library Stool Chair",
-      price: "$20",
-      label: "New",
-      labelColor: "bg-green-500",
-    },
-    {
-      src: "/product2.png",
-      alt: "Library Stool Chair",
-      price: "$20",
-      originalPrice: "$30",
-      label: "Sales",
-      labelColor: "bg-red-500",
-    },
-    {
-      src: "/product3.png",
-      alt: "Library Stool Chair",
-      price: "$20",
-    },
-    {
-      src: "/product4.png",
-      alt: "Library Stool Chair",
-      price: "$20",
-    },
-    {
-      src: "/chair1.png",
-      alt: "Library Stool Chair",
-      price: "$20",
-      label: "New",
-      labelColor: "bg-green-500",
-    },
-    {
-      src: "/chair.png",
-      alt: "Library Stool Chair",
-      price: "$20",
-      originalPrice: "$30",
-      label: "Sales",
-      labelColor: "bg-red-500",
-    },
-    {
-      src: "/chair4.png",
-      alt: "Library Stool Chair",
-      price: "$20",
-    },
-    {
-      src: "/product1.png",
-      alt: "Library Stool Chair",
-      price: "$20",
-    },
-  ];
-
-  if (!isClient) return null; // Prevents rendering on the server to avoid mismatch
+  if (!products.length) return <p>Loading...</p>;
 
   return (
     <div className="px-4 sm:px-8 lg:px-32 mx-auto">
@@ -72,9 +50,9 @@ const ProductList: React.FC = () => {
           Our Products
         </h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-          {products.map((product, index) => (
+          {products.map((product) => (
             <div
-              key={index}
+              key={product._id}
               className="relative bg-white rounded-lg shadow-md p-4 hover:shadow-lg transition-shadow border border-gray-200"
             >
               {/* Product Label */}
@@ -88,8 +66,8 @@ const ProductList: React.FC = () => {
 
               {/* Product Image */}
               <Image
-                src={product.src}
-                alt={product.alt}
+                src={product.imageUrl}
+                alt={product.title}
                 width={200}
                 height={200}
                 className="w-full h-auto rounded-lg object-cover"
@@ -98,15 +76,15 @@ const ProductList: React.FC = () => {
               {/* Product Details */}
               <div className="mt-4 text-center">
                 <h3 className="text-gray-800 text-lg font-medium">
-                  {product.alt}
+                  {product.title}
                 </h3>
                 <div className="flex justify-center items-center mt-2">
                   <span className="text-lg font-semibold text-gray-800">
-                    {product.price}
+                    ${product.price}
                   </span>
                   {product.originalPrice && (
                     <span className="text-sm text-gray-400 line-through ml-2">
-                      {product.originalPrice}
+                      ${product.originalPrice}
                     </span>
                   )}
                 </div>
