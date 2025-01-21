@@ -1,10 +1,11 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
-import Topbar from "@/components/topbar";
-import Header from "@/components/header";
-import Navbar from "@/components/navbar";
-import Footer from "@/components/footer";
+import Topbar from "./components/topbar";
+import Header from "./components/header";
+import Navbar from "./components/navbar";
+import Footer from "./components/footer";
+import SearchBar from "./components/SearchBar";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -33,6 +34,9 @@ export default function RootLayout({
       >
         <Topbar />
         <Header />
+        <div className="block md:hidden">
+        <SearchBar />
+        </div>
         <Navbar />
         {children}
 

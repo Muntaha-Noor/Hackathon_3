@@ -29,6 +29,7 @@ const Navbar = () => {
             </span>
           </div>
 
+
           <div className="lg:hidden">
             <button onClick={toggleMenu}>
               {isMenuOpen ? <FaTimes className="text-2xl" /> : <FaBars className="text-2xl" />}

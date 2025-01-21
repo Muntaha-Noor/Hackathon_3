@@ -1,8 +1,9 @@
-"use client"
+"use client";
 import { CiShoppingCart } from "react-icons/ci";
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import { client } from "@/sanity/lib/client";
+import Link from "next/link"; 
 
 interface Product {
   _id: string;
@@ -13,11 +14,12 @@ interface Product {
   description: string;
   badge: string | null;
   tags: string[];
+  slug: { current: string }; 
 }
 
 const FeaturedProducts = () => {
   const [products, setProducts] = useState<Product[]>([]);
-  const [loading, setLoading] = useState(true); 
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchFeaturedProducts = async () => {
@@ -30,16 +32,16 @@ const FeaturedProducts = () => {
           badge,
           "imageUrl": image.asset->url,
           description,
-          tags
+          tags,
+          slug
         }`;
 
         const fetchedProducts: Product[] = await client.fetch(query);
         setProducts(fetchedProducts);
-        console.log(fetchedProducts);
-        setLoading(false); 
+        setLoading(false);
       } catch (error) {
         console.error("Error fetching featured products:", error);
-        setLoading(false); 
+        setLoading(false);
       }
     };
 
@@ -47,7 +49,7 @@ const FeaturedProducts = () => {
   }, []);
 
   if (loading) {
-    return <div className="text-center py-10">Loading Featured Products...</div>; 
+    return <div className="text-center py-10">Loading Featured Products...</div>;
   }
 
   return (
@@ -62,14 +64,16 @@ const FeaturedProducts = () => {
               key={product._id}
               className="relative bg-white shadow-lg p-4 rounded-md hover:shadow-xl transition-shadow"
             >
-              <Image
-                src={product.imageUrl}
-                alt={product.title}
-                width={312}
-                height={312}
-                className="w-full h-auto rounded-md"
-              />
-              <h3 className="text-lg font-bold mt-2">{product.title}</h3>
+              <Link href={`/product/${product.slug.current}`} passHref>
+                <Image
+                  src={product.imageUrl}
+                  alt={product.title}
+                  width={312}
+                  height={312}
+                  className="w-full h-auto rounded-md"
+                />
+                <h3 className="text-lg font-bold mt-2">{product.title}</h3>
+              </Link>
               <p className="text-black font-bold">${product.price}</p>
               {product.priceWithoutDiscount && (
                 <p className="text-gray-400 line-through">

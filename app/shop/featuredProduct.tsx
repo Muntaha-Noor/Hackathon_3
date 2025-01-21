@@ -1,14 +1,41 @@
 import Image from "next/image";
-import React from "react";
+import React, { useEffect, useState } from "react";
+import { client } from "@/sanity/lib/client"; 
+import Link from "next/link"; 
 
-const FeaturedProducts: React.FC = () => {
-  const products = [
-    { id: 1, name: "Library Black Chair", price: "$99", image: "/chair4.png" },
-    { id: 2, name: "Library Stool Chair", price: "$99", image: "/product1.png" },
-    { id: 3, name: "Library Black Chair", price: "$99", image: "/chair3.png" },
-    { id: 4, name: "Library Black Chair", price: "$99", image: "/product3.png" },
-    { id: 5, name: "Library Stool Chair", price: "$99", image: "/chair1.png" },
-  ];
+interface Product {
+  _id: string;
+  title: string;
+  price: number;
+  imageUrl: string;
+  slug: string; 
+}
+
+const FeaturedProduct: React.FC = () => {
+  const [products, setProducts] = useState<Product[]>([]);
+
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        const query = `*[_type == "products" && defined(slug.current)] | order(_createdAt desc)[0...5] {
+          _id,
+          title,
+          price,
+          "imageUrl": image.asset->url,
+          "slug": slug.current // Fetch slug.current directly as a string
+        }`;
+
+        const fetchedProducts: Product[] = await client.fetch(query);
+        setProducts(fetchedProducts);
+      } catch (error) {
+        console.error("Error fetching products:", error);
+      }
+    };
+
+    fetchProducts();
+  }, []);
+
+  if (!products.length) return <p>Loading...</p>;
 
   return (
     <div className="px-6 py-10">
@@ -18,18 +45,20 @@ const FeaturedProducts: React.FC = () => {
       </div>
       <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-6 mt-6">
         {products.map((product) => (
-          <div key={product.id} className="text-center">
-            <Image
-              src={product.image}
-              alt={product.name}
-              height={312}
-              width={312}
-              className="w-full h-auto rounded-lg shadow-md"
-            />
-            <div className="flex justify-between items-center mt-4">
-              <h2 className="text-lg font-semibold">{product.name}</h2>
-              <p className="text-gray-900 font-bold">{product.price}</p>
-            </div>
+          <div key={product._id} className="text-center">
+            <Link href={`/product/${product.slug}`}>
+              <Image
+                src={product.imageUrl}
+                alt={product.title}
+                height={312}
+                width={312}
+                className="w-full h-auto rounded-lg shadow-md"
+              />
+              <div className="flex justify-between items-center mt-4">
+                <h2 className="text-lg font-semibold">{product.title}</h2>
+                <p className="text-gray-900 font-bold">${product.price}</p>
+              </div>
+            </Link>
           </div>
         ))}
       </div>
@@ -37,4 +66,4 @@ const FeaturedProducts: React.FC = () => {
   );
 };
 
-export default FeaturedProducts;
+export default FeaturedProduct;

@@ -2,12 +2,14 @@
 import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import { CiShoppingCart } from "react-icons/ci";
-import { client } from "@/sanity/lib/client"; 
+import { client } from "@/sanity/lib/client";
 import ProductSection from "./productSection";
+import Link from "next/link"; 
 
 interface Product {
   _id: string;
   title: string;
+  slug: { current: string }; 
   price: number;
   originalPrice?: number;
   imageUrl: string;
@@ -21,15 +23,18 @@ const Product: React.FC = () => {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const query = `*[_type == "products"][1...13] {
-          _id,
-          title,
-          price,
-          originalPrice,
-          "imageUrl": image.asset->url,
-          label,
-          labelColor
-        }`;
+        const query = `
+          *[_type == "products"][1...13] {
+            _id,
+            title,
+            slug, // Ensure slug is included in the query
+            price,
+            originalPrice,
+            "imageUrl": image.asset->url,
+            label,
+            labelColor
+          }
+        `;
 
         const fetchedProducts: Product[] = await client.fetch(query);
         setProducts(fetchedProducts);
@@ -61,17 +66,22 @@ const Product: React.FC = () => {
                 </span>
               )}
 
-              <Image
-                src={product.imageUrl}
-                alt={product.title}
-                width={312}
-                height={312}
-                className="w-full h-56 rounded-lg object-cover"
-              />
+              <Link href={`/product/${product.slug.current}`} passHref>
+                <Image
+                  src={product.imageUrl}
+                  alt={product.title}
+                  width={312}
+                  height={312}
+                  className="w-full h-56 rounded-lg object-cover"
+                />
+              </Link>
 
               <div className="mt-4 flex justify-between items-center">
                 <div>
-                  <h3 className="text-gray-800 text-lg font-medium">{product.title}</h3>
+                  <Link href={`/product/${product.slug.current}`} passHref>
+                    <h3 className="text-gray-800 text-lg font-medium">{product.title}</h3>
+                  </Link>
+
                   <div className="flex items-center mt-1">
                     <span className="text-lg font-semibold text-gray-800">
                       ${product.price}
@@ -97,3 +107,4 @@ const Product: React.FC = () => {
 };
 
 export default Product;
+

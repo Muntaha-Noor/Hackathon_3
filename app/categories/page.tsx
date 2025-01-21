@@ -1,11 +1,13 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import Image from "next/image";
+import Link from "next/link";  
 import { client } from "@/sanity/lib/client";
 
 interface Category {
   _id: string;
   title: string;
+  slug: { current: string };  
   imageUrl: string;
   products: number;
 }
@@ -15,14 +17,13 @@ const TopCategories: React.FC = () => {
 
   useEffect(() => {
     const fetchCategories = async () => {
-      const query = `
-        *[_type == "categories"] {
-          _id,
-          title,
-          "imageUrl": image.asset->url,
-          products
-        }
-      `;
+      const query = `*[_type == "categories"] {
+        _id,
+        title,
+        "slug": slug.current,  // Fetch slug for dynamic routing
+        "imageUrl": image.asset->url,
+        products
+      }`;
       const sanityCategories: Category[] = await client.fetch(query);
       setCategories(sanityCategories);
     };
@@ -42,13 +43,15 @@ const TopCategories: React.FC = () => {
               key={category._id}
               className="bg-white shadow-md rounded-lg overflow-hidden hover:shadow-lg transition-shadow"
             >
-              <Image
-                src={category.imageUrl}
-                alt={category.title}
-                height={424}
-                width={424}
-                className="w-full object-cover"
-              />
+              <Link href={`/categories/${category.slug}`}>
+                <Image
+                  src={category.imageUrl}
+                  alt={category.title}
+                  height={424}
+                  width={424}
+                  className="w-full object-cover"
+                />
+              </Link>
 
               <div className="p-4 text-center">
                 <h3 className="text-lg font-medium">{category.title}</h3>
