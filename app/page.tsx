@@ -1,3 +1,4 @@
+import './globals.css';
 import TopCategories from "./categories/page";
 import FeaturedProducts from "./components/featuredProduct";
 import Hero from "./components/hero";

@@ -4,12 +4,12 @@ import Image from "next/image";
 import { CiShoppingCart } from "react-icons/ci";
 import { client } from "@/sanity/lib/client";
 import ProductSection from "./productSection";
-import Link from "next/link"; 
+import Link from "next/link";
 
 interface Product {
   _id: string;
   title: string;
-  slug: { current: string }; 
+  slug: { current: string };
   price: number;
   originalPrice?: number;
   imageUrl: string;
@@ -19,15 +19,17 @@ interface Product {
 
 const Product: React.FC = () => {
   const [products, setProducts] = useState<Product[]>([]);
+  const [currentPage, setCurrentPage] = useState(1); // Current page number
+  const [productsPerPage] = useState(8); // Number of products per page
 
   useEffect(() => {
     const fetchProducts = async () => {
       try {
         const query = `
-          *[_type == "products"][1...13] {
+          *[_type == "products"] {
             _id,
             title,
-            slug, // Ensure slug is included in the query
+            slug,
             price,
             originalPrice,
             "imageUrl": image.asset->url,
@@ -46,6 +48,25 @@ const Product: React.FC = () => {
     fetchProducts();
   }, []);
 
+  // Pagination logic
+  const indexOfLastProduct = currentPage * productsPerPage;
+  const indexOfFirstProduct = indexOfLastProduct - productsPerPage;
+  const currentProducts = products.slice(indexOfFirstProduct, indexOfLastProduct);
+
+  const totalPages = Math.ceil(products.length / productsPerPage);
+
+  const handleNextPage = () => {
+    if (currentPage < totalPages) {
+      setCurrentPage((prev) => prev + 1);
+    }
+  };
+
+  const handlePreviousPage = () => {
+    if (currentPage > 1) {
+      setCurrentPage((prev) => prev - 1);
+    }
+  };
+
   if (!products.length) return <p>Loading...</p>;
 
   return (
@@ -53,7 +74,7 @@ const Product: React.FC = () => {
       <div className="sm:px-6 md:px-8 py-12 mx-auto">
         <h2 className="text-center text-2xl font-semibold mb-8">All Products</h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-4 gap-6">
-          {products.map((product) => (
+          {currentProducts.map((product) => (
             <div
               key={product._id}
               className="relative bg-white rounded-lg shadow-lg p-4 border border-gray-200 group"
@@ -100,6 +121,49 @@ const Product: React.FC = () => {
             </div>
           ))}
         </div>
+
+        {/* Pagination Controls */}
+        <div className="flex justify-center mt-8 space-x-4">
+          <button
+            onClick={handlePreviousPage}
+            disabled={currentPage === 1}
+            className={`px-4 py-2 rounded ${
+              currentPage === 1
+                ? "bg-gray-300 text-gray-500 cursor-not-allowed"
+                : "bg-primary text-white"
+            }`}
+          >
+            Previous
+          </button>
+
+          <div className="flex items-center space-x-2">
+            {Array.from({ length: totalPages }, (_, index) => (
+              <button
+                key={index}
+                onClick={() => setCurrentPage(index + 1)}
+                className={`px-4 py-2 rounded ${
+                  currentPage === index + 1
+                    ? "bg-primary text-white"
+                    : "bg-gray-100 text-gray-800 hover:bg-primary"
+                }`}
+              >
+                {index + 1}
+              </button>
+            ))}
+          </div>
+
+          <button
+            onClick={handleNextPage}
+            disabled={currentPage === totalPages}
+            className={`px-4 py-2 rounded ${
+              currentPage === totalPages
+                ? "bg-gray-300 text-gray-500 cursor-not-allowed"
+                : "bg-primary text-white"
+            }`}
+          >
+            Next
+          </button>
+        </div>
       </div>
       <ProductSection />
     </div>
@@ -107,4 +171,3 @@ const Product: React.FC = () => {
 };
 
 export default Product;
-

@@ -4,6 +4,7 @@ import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { client } from "@/sanity/lib/client";
 import { searchQuery } from "@/sanity/lib/queries";
+import { IoSearch } from "react-icons/io5";
 
 interface Product {
   _id: string;
@@ -15,11 +16,11 @@ interface Product {
 
 const SearchBar: React.FC = () => {
   const router = useRouter();
-  const [searchTerm, setSearchTerm] = useState<string>(""); 
-  const [results, setResults] = useState<Product[]>([]); 
-  const [debouncedSearchTerm, setDebouncedSearchTerm] = useState<string>(""); 
-  const [history, setHistory] = useState<string[]>([]); 
-  const [showSuggestions, setShowSuggestions] = useState<boolean>(false); 
+  const [searchTerm, setSearchTerm] = useState<string>("");
+  const [results, setResults] = useState<Product[]>([]);
+  const [debouncedSearchTerm, setDebouncedSearchTerm] = useState<string>("");
+  const [history, setHistory] = useState<string[]>([]);
+  const [showSuggestions, setShowSuggestions] = useState<boolean>(false);
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -37,7 +38,7 @@ const SearchBar: React.FC = () => {
       }
 
       const query = searchQuery(debouncedSearchTerm);
-      const data: Product[] = await client.fetch(query); 
+      const data: Product[] = await client.fetch(query);
 
       const filteredResults = data.filter((product) =>
         product.title.toLowerCase().includes(debouncedSearchTerm.toLowerCase())
@@ -54,9 +55,9 @@ const SearchBar: React.FC = () => {
       setHistory((prev) => [...prev, searchTerm]);
     }
 
-    setSearchTerm(""); 
-    setShowSuggestions(false); 
-    router.push(`/product/${slug}`); 
+    setSearchTerm("");
+    setShowSuggestions(false);
+    router.push(`/product/${slug}`);
   };
 
   const handleRemoveHistoryItem = (item: string) => {
@@ -66,12 +67,15 @@ const SearchBar: React.FC = () => {
   const handleBlur = () => {
     setTimeout(() => {
       setShowSuggestions(false);
-    }, 200); 
+    }, 200);
   };
 
   return (
-    <div className="w-full max-w-lg mx-auto relative">
+    <div className="w-full max-w-2xl mx-auto relative"> 
       <div className="flex items-center border border-gray-300 rounded-lg overflow-hidden focus-within:border-gray-500">
+        <span className="px-3 text-gray-800 flex items-center"> 
+          <IoSearch className="h-5 w-5" /> 
+        </span>
         <input
           type="text"
           placeholder="Search for products..."

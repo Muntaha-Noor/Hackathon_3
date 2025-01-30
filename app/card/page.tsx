@@ -1,71 +1,98 @@
-import React from "react";
+"use client"
+import { useSelector, useDispatch } from "react-redux";
+import { RootState } from "@/app/store/store";
+import { removeFromCart } from "@/app/store/slices/CartSlice";
 import Image from "next/image";
 import { FaHeart, FaTrash } from "react-icons/fa";
+import Swal from "sweetalert2";
 
-const CartPage: React.FC = () => {
-  const items = [
-    {
-      id: 1,
-      name: "Library Stool Chair",
-      color: "Ashen Slate / Cobalt Bliss",
-      size: "L",
-      quantity: 1,
-      price: 99,
-      image: "/product3.png",
-    },
-    {
-      id: 2,
-      name: "Library Stool Chair",
-      color: "Ashen Slate / Cobalt Bliss",
-      size: "L",
-      quantity: 1,
-      price: 99,
-      image: "/chair1.png",
-    },
-  ];
+interface CartItem {
+  id: string;
+  title: string;
+  price: number;
+  imageUrl?: string;
+  size: string | undefined;
+  color: string | undefined;
+  quantity: number;
+}
 
-  const subtotal = items.reduce((total, item) => total + item.price * item.quantity, 0);
+const Cart = () => {
+  const cartItems = useSelector((state: RootState) => state.cart.cartItems);
+  const dispatch = useDispatch();
 
+  const subtotal = cartItems.reduce(
+    (total, item) => total + item.price * item.quantity,
+    0
+  );
+
+  const handleRemove = (item: CartItem) => {
+    Swal.fire({
+      title: "Are you sure?",
+      text: "You won't be able to revert this!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#d33",
+      cancelButtonColor: "#3085d6",
+      confirmButtonText: "Yes, delete it!",
+    }).then((result: {isConfirmed: boolean}) => {
+      if (result.isConfirmed) {
+        dispatch(removeFromCart({ id: item.id, size: item.size ?? "", color: item.color ?? "" }));
+        Swal.fire("Deleted!", "Your item has been removed.", "success");
+      }
+    });
+  };
+  
+  
   return (
     <div className="px-4 lg:px-[150px] mx-auto">
       <div className="flex flex-col lg:flex-row justify-between p-6 gap-8">
         <div className="flex-1">
           <h1 className="text-2xl font-bold mb-4">Bag</h1>
-          {items.map((item) => (
-            <div
-              key={item.id}
-              className="flex items-center justify-between border-b border-gray-200 py-4"
-            >
-              <div className="flex items-center gap-4">
-                <div className="w-20 h-20 relative">
-                  <Image
-                    src={item.image}
-                    alt={item.name}
-                    layout="fill"
-                    objectFit="cover"
-                    className="rounded-lg"
-                  />
+          {cartItems.length === 0 ? (
+            <p className="text-gray-500">Your cart is empty.</p>
+          ) : (
+            cartItems.map((item) => (
+              <div
+                key={item.id + item.size + item.color}
+                className="flex items-center justify-between border-b border-gray-200 py-4"
+              >
+                <div className="flex items-center gap-4 flex-1">
+                  <div className="w-20 h-20 relative">
+                    <Image
+                      src={item.imageUrl ?? "/placeholder-image.jpg"}
+                      alt={item.title}
+                      layout="fill"
+                      objectFit="cover"
+                      className="rounded-lg"
+                    />
+                  </div>
+                  <div>
+                    <h2 className="text-lg font-semibold">{item.title}</h2>
+                    <div className="flex items-center gap-4 mt-1">
+                      <p className="text-gray-500">Size: {item.size}</p>
+                      <div className="flex items-center gap-2">
+                        <p className="text-gray-500">Color:</p>
+                        <div
+                          className="w-5 h-5 rounded-full border"
+                          style={{ backgroundColor: item.color }}
+                        />
+                      </div>
+                    </div>
+                    <div className="flex items-center gap-4 mt-2">
+                      <p className="text-gray-500">Quantity: {item.quantity}</p>
+                      <button>
+                        <FaHeart className="text-gray-500 hover:text-red-500" />
+                      </button>
+                      <button onClick={() => handleRemove(item as CartItem)}>
+                        <FaTrash className="text-gray-500 hover:text-red-500" />
+                      </button>
+                    </div>
+                  </div>
                 </div>
-                <div>
-                  <h2 className="text-lg font-semibold">{item.name}</h2>
-                  <p className="text-gray-500">{item.color}</p>
-                  <p className="text-gray-500">Size: {item.size}</p>
-                  <p className="text-gray-500">Quantity: {item.quantity}</p>
-                </div>
+                <p className="text-lg font-bold">${item.price.toFixed(2)}</p>
               </div>
-              <div className="flex items-center gap-4">
-                <p className="text-lg font-bold">MRP: ${item.price}</p>
-                <div className="flex gap-2">
-                  <button>
-                    <FaHeart className="text-gray-500 hover:text-red-500" />
-                  </button>
-                  <button>
-                    <FaTrash className="text-gray-500 hover:text-red-500" />
-                  </button>
-                </div>
-              </div>
-            </div>
-          ))}
+            ))
+          )}
         </div>
 
         <div className="w-full lg:w-1/3">
@@ -93,4 +120,4 @@ const CartPage: React.FC = () => {
   );
 };
 
-export default CartPage;
+export default Cart;

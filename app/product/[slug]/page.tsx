@@ -1,14 +1,19 @@
 "use client";
-
 import React, { useEffect, useState } from "react";
-import Image from "next/image";
 import { useParams } from "next/navigation";
 import { client } from "@/sanity/lib/client";
 import { CiShoppingCart } from "react-icons/ci";
-import { FaRegHeart } from "react-icons/fa";
+import { AiOutlineHeart } from "react-icons/ai";
+import Image from "next/image";
+import Swal from "sweetalert2";
+import { RootState } from "@/app/store/store";
+import { addToCart} from "@/app/store/slices/CartSlice";
+import { addToWishlist } from "@/app/store/slices/WishlistSlice";
+import { useDispatch, useSelector } from "react-redux";
 import FeaturedProduct from "@/app/shop/featuredProduct";
 
 interface Product {
+  _id: string;
   title: string;
   price: number;
   description: string;
@@ -23,10 +28,12 @@ interface Product {
 const ProductDetail: React.FC = () => {
   const params = useParams();
   const { slug } = params as { slug: string };
+const dispatch = useDispatch();
+  const cartItems = useSelector((state: RootState) => state.cart.cartItems);
+const wishlistItems = useSelector((state: RootState) => state.wishlist.wishlistItems);
 
-  const [product, setProduct] = useState<Product | null>(null);
-  const [loading, setLoading] = useState<boolean>(true);
-  const [userRating, setUserRating] = useState<number>(0);
+const [product, setProduct] = useState<Product | null>(null);
+const [loading, setLoading] = useState<boolean>(true);
   const [selectedSize, setSelectedSize] = useState<string | null>(null);
   const [selectedColor, setSelectedColor] = useState<string | null>(null);
   const [quantity, setQuantity] = useState<number>(1);
@@ -35,7 +42,7 @@ const ProductDetail: React.FC = () => {
     const fetchProduct = async () => {
       try {
         const query = `*[_type == "products" && slug.current == $slug][0] {
-          title, price, description, "imageUrl": image.asset->url, stock, rating, totalRatings, size, colors
+          _id, title, price, description, "imageUrl": image.asset->url, stock, rating, totalRatings, size, colors
         }`;
         const result: Product = await client.fetch(query, { slug });
         setProduct(result);
@@ -49,35 +56,98 @@ const ProductDetail: React.FC = () => {
     if (slug) fetchProduct();
   }, [slug]);
 
-  const handleRating = (rating: number) => {
-    setUserRating(rating);
+  const handleQuantityChange = (action: "increase" | "decrease") => {
+    if (action === "increase") setQuantity(quantity + 1);
+    else if (action === "decrease" && quantity > 1) setQuantity(quantity - 1);
   };
 
-  const incrementQuantity = () => {
-    if (product?.stock && quantity < product.stock) {
-      setQuantity((prevQuantity) => prevQuantity + 1);
+  const handleAddToCart = () => {
+    if (!product) return;
+  
+    if (!selectedSize || !selectedColor) {
+      Swal.fire({
+        text: "Please select a size and color before adding to cart!",
+        icon: "warning",
+        timer: 2500,
+        showConfirmButton: false,
+      });
+      return;
+    }
+  
+    const existingItem = cartItems.find(
+      (item) =>
+        item.id === product._id &&
+        item.size === selectedSize &&
+        item.color === selectedColor
+    );
+  
+    if (existingItem) {
+      if (existingItem.quantity === quantity) {
+        Swal.fire({
+          text: "Product is already added to cart with same quantity!",
+          icon: "info",
+          timer: 2500,
+          showConfirmButton: false,
+        });
+      } else {
+        dispatch(
+          addToCart({
+            ...existingItem,
+            quantity: existingItem.quantity + quantity,
+          })
+        );
+        Swal.fire({
+          text: "Quantity updated!",
+          icon: "info",
+          timer: 2500,
+          showConfirmButton: false,
+        });
+      }
+    } else {
+      const cartItem = {
+        id: String(product._id),
+        title: product.title,
+        price: product.price,
+        imageUrl: product.imageUrl,
+        size: selectedSize,
+        color: selectedColor,
+        quantity: quantity,
+      };
+      dispatch(addToCart(cartItem));
+      Swal.fire({
+        text: `${product.title} added to Cart!`,
+        icon: "success",
+        timer: 3000,
+        showConfirmButton: false,
+      });
     }
   };
+  
+const handleWishlistToggle = () => {
+  if (product) {
+    const isInWishlist = wishlistItems.some((item) => item.id === product._id);
 
-  const decrementQuantity = () => {
-    if (quantity > 1) {
-      setQuantity((prevQuantity) => prevQuantity - 1);
+    if (isInWishlist) {
+      Swal.fire({
+        text: "This product is already in your wishlist!",
+        icon: "warning",
+        timer: 2500,
+        showConfirmButton: false,
+      });
+    } else {
+      dispatch(addToWishlist({ id: product._id, title: product.title, price: product.price, imageUrl: product.imageUrl }));
+      Swal.fire({
+        text: `${product.title} added to Wishlist!`,
+        icon: "success",
+        timer: 3000,
+        showConfirmButton: false,
+      });
     }
-  };
-
-  if (loading) {
-    return (
-      <div className="flex justify-center items-center min-h-screen">Loading...</div>
-    );
   }
+};
 
-  if (!product) {
-    return (
-      <div className="flex justify-center items-center min-h-screen">
-        <h1 className="text-3xl font-semibold text-gray-600">Product not found!</h1>
-      </div>
-    );
-  }
+  if (loading) return <div>Loading...</div>;
+  if (!product) return <div>Product not found!</div>;
 
   return (
     <div>
@@ -88,9 +158,9 @@ const ProductDetail: React.FC = () => {
             <Image
               src={product.imageUrl}
               alt={product.title}
+              className="rounded-lg object-cover shadow"
               height={400}
               width={400}
-              className="rounded-lg object-cover shadow"
             />
           </div>
 
@@ -99,101 +169,79 @@ const ProductDetail: React.FC = () => {
             <p className="text-lg text-gray-600 mt-2">${product.price.toFixed(2)}</p>
             <p className="text-sm text-gray-500 mt-2">{product.description}</p>
 
-            <div className="flex items-center mt-4">
-              <span className="text-gray-700 font-medium">Rating:</span>
-              <div className="flex ml-2">
-                {[1, 2, 3, 4, 5].map((star) => (
-                  <span
-                    key={star}
-                    onClick={() => handleRating(star)}
-                    className={`cursor-pointer text-xl ${
-                      star <= userRating ? "text-yellow-500" : "text-gray-300"
-                    }`}
-                  >
-                    ★
-                  </span>
-                ))}
+            {product.size.length > 0 && (
+              <div className="mt-4">
+                <h3 className="text-gray-700 font-medium mb-2">Size:</h3>
+                <div className="flex flex-wrap gap-2">
+                  {product.size.map((size) => (
+                    <button
+                      key={size}
+                      className={`px-4 py-2 border rounded ${
+                        selectedSize === size ? "bg-gray-800 text-white" : "bg-gray-200 hover:bg-gray-300"
+                      }`}
+                      onClick={() => setSelectedSize(size)}
+                    >
+                      {size}
+                    </button>
+                  ))}
+                </div>
               </div>
-              <span className="ml-2 text-sm text-gray-600">
-                ({product.totalRatings + userRating} ratings)
-              </span>
-            </div>
+            )}
 
-            <div className="mt-4">
-              <strong>Size:</strong>
-              <div className="flex space-x-2 mt-2">
-                {product.size.map((size) => (
-                  <button
-                    key={size}
-                    className={`px-4 py-2 border rounded ${
-                      selectedSize === size
-                        ? "bg-gray-800 text-white"
-                        : "bg-gray-200 hover:bg-gray-300"
-                    }`}
-                    onClick={() => setSelectedSize(size)}
-                  >
-                    {size}
-                  </button>
-                ))}
+            {product.colors.length > 0 && (
+              <div className="mt-4">
+                <h3 className="text-gray-700 font-medium mb-2">Color:</h3>
+                <div className="flex flex-wrap gap-2">
+                  {product.colors.map((color) => (
+                    <div
+                      key={color}
+                      className={`w-8 h-8 rounded-full border-2 cursor-pointer ${
+                        selectedColor === color ? "border-black" : "border-transparent"
+                      }`}
+                      style={{ backgroundColor: color }}
+                      onClick={() => setSelectedColor(color)}
+                    ></div>
+                  ))}
+                </div>
               </div>
-            </div>
+            )}
 
-            <div className="mt-4">
-              <strong>Color:</strong>
-              <div className="flex space-x-2 mt-2">
-                {product.colors.map((color) => (
-                  <div
-                    key={color}
-                    className={`w-8 h-8 rounded-full border-2 cursor-pointer ${
-                      selectedColor === color ? "border-black" : "border-transparent"
-                    }`}
-                    style={{ backgroundColor: color }}
-                    onClick={() => setSelectedColor(color)}
-                  ></div>
-                ))}
-              </div>
+            <div className="flex items-center gap-4 mt-6">
+              <button
+                onClick={() => handleQuantityChange("decrease")}
+                className="px-3 py-1 border rounded-md text-lg"
+              >
+                -
+              </button>
+              <span className="text-lg">{quantity}</span>
+              <button
+                onClick={() => handleQuantityChange("increase")}
+                className="px-3 py-1 border rounded-md text-lg"
+              >
+                +
+              </button>
             </div>
 
             <div className="flex items-center space-x-4 mt-6">
-              <div className="flex items-center border rounded shadow-sm">
-                <button
-                  className="px-3 py-1 border-r hover:bg-gray-100"
-                  onClick={decrementQuantity}
-                >
-                  -
-                </button>
-                <span className="px-4">{quantity}</span>
-                <button
-                  className="px-3 py-1 border-l hover:bg-gray-100"
-                  onClick={incrementQuantity}
-                >
-                  +
-                </button>
-              </div>
-
               <button
-                className="bg-primary text-white py-2 px-6 rounded flex items-center space-x-2 shadow-sm "
-                onClick={() => console.log("Add to Cart", quantity)}
+                className="bg-primary hover:bg-teal-600 flex items-center text-white py-2 px-4 rounded-lg"
+                onClick={handleAddToCart}
               >
-                <CiShoppingCart className="text-xl" />
-                <span>Add to Cart</span>
+                <CiShoppingCart className="text-white text-3xl pr-2" /> Add To Cart
               </button>
-
               <button
-                className="bg-primary text-white py-2 px-6 rounded flex items-center shadow-sm "
-                onClick={() => console.log("Add to Wishlist")}
+                className="bg-gray-500 hover:bg-gray-600 flex items-center text-white py-2 px-4 rounded-lg"
+                onClick={handleWishlistToggle}
               >
-                <FaRegHeart />
-                <span className="flex items-center">Add to Wishlist</span>
+                <AiOutlineHeart className="text-white text-3xl pr-2" /> Wishlist
               </button>
             </div>
           </div>
         </div>
       </div>
     </div>
-
-<FeaturedProduct />
-</div>
+    <FeaturedProduct />
+    </div>
   );
 };
 

@@ -18,10 +18,13 @@ const LogoSection: React.FC = () => {
   ];
 
   return (
-    <div className="px-8 lg:px-[100px] py-6">
-      <div className="flex flex-wrap justify-between gap-5 items-center">
+    <div className="px-4 lg:px-[100px] py-6 ml-20 mr-20">
+      <div className="flex flex-wrap justify-center sm:justify-between items-center gap-4">
         {logos.map((logo, index) => (
-          <div key={index} className="flex-shrink-0 h-20 w-32 sm:h-24 sm:w-36 md:h-28 md:w-40">
+          <div
+            key={index}
+            className="h-16 w-24 flex-shrink-0 sm:h-20 sm:w-28 md:h-24 md:w-32 lg:h-16 lg:w-24"
+          >
             <Image
               src={logo.src}
               alt={logo.alt}

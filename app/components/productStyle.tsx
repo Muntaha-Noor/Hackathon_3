@@ -40,9 +40,9 @@ const ProductStyle = () => {
 
   return (
     <div>
-      <section className="flex flex-col justify-center md:flex-row items-center gap-6 p-6">
-        <div className="flex flex-col items-center">
-          <div className="mt-6">
+      <section className="p-6">
+        <div className="flex flex-col items-center lg:flex-row lg:items-start lg:px-10"> {/* Padding added here */}
+          <div className="mb-6 lg:mb-0 lg:w-1/2 lg:pr-4">
             <Link href={`/product/${products[0]?.slug.current}`}>
               <Image
                 src={products[0]?.imageUrl || "/product3.png"} 
@@ -53,23 +53,23 @@ const ProductStyle = () => {
               />
             </Link>
           </div>
-        </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          {products.map((product) => (
-            <div key={product._id}>
-              <Link href={`/product/${product.slug.current}`}>
-                <Image
-                  src={product.imageUrl || "/product4.png"}
-                  alt={product.title}
-                  height={250}
-                  width={250}
-                  className="rounded-md"
-                />
-                <h3 className="text-center mt-2 text-lg font-semibold">{product.title}</h3>
-              </Link>
-            </div>
-          ))}
+          <div className="grid grid-cols-2 gap-4 lg:grid-cols-2 lg:w-1/2 lg:gap-x-1">
+            {products.map((product) => (
+              <div key={product._id} className="flex justify-center">
+                <Link href={`/product/${product.slug.current}`}>
+                  <Image
+                    src={product.imageUrl || "/product4.png"}
+                    alt={product.title}
+                    height={250}
+                    width={250}
+                    className="rounded-md"
+                  />
+                  <h3 className="text-center mt-2 text-lg font-semibold">{product.title}</h3>
+                </Link>
+              </div>
+            ))}
+          </div>
         </div>
       </section>
     </div>
