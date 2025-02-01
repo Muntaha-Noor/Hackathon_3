@@ -32,7 +32,12 @@ export const productSchema = defineType({
           type: "object",
           fields: [
             { name: "reviewerName", title: "Reviewer Name", type: "string" },
-            { name: "rating", title: "Rating", type: "number", validation: (Rule) => Rule.min(0).max(5) },
+            {
+              name: "rating",
+              title: "Rating",
+              type: "number",
+              validation: (Rule) => Rule.min(0).max(5),
+            },
             { name: "comment", title: "Comment", type: "text" },
           ],
         },
@@ -84,7 +89,7 @@ export const productSchema = defineType({
         maxLength: 200,
         slugify: (input) =>
           `${input.toLowerCase().replace(/\s+/g, "-")}-${Math.floor(
-            Math.random() * 100000
+            Math.random() * 100000,
           )}`,
       },
     },

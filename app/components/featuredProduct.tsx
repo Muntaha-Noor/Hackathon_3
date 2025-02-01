@@ -1,9 +1,9 @@
 "use client";
-import { CiShoppingCart } from "react-icons/ci";
+import { MdOutlineShoppingCart } from "react-icons/md";
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import { client } from "@/sanity/lib/client";
-import Link from "next/link"; 
+import Link from "next/link";
 
 interface Product {
   _id: string;
@@ -14,7 +14,7 @@ interface Product {
   description: string;
   badge: string | null;
   tags: string[];
-  slug: { current: string }; 
+  slug: { current: string };
 }
 
 const FeaturedProducts = () => {
@@ -49,7 +49,9 @@ const FeaturedProducts = () => {
   }, []);
 
   if (loading) {
-    return <div className="text-center py-10">Loading Featured Products...</div>;
+    return (
+      <div className="text-center py-10">Loading Featured Products...</div>
+    );
   }
 
   return (
@@ -85,14 +87,18 @@ const FeaturedProducts = () => {
                   className="absolute top-2 left-2 px-2 py-1 text-white text-xs font-bold rounded"
                   style={{
                     backgroundColor:
-                      product.badge === "New" ? "green" : product.badge === "Sale" ? "red" : "gray",
+                      product.badge === "New"
+                        ? "green"
+                        : product.badge === "Sale"
+                          ? "red"
+                          : "gray",
                   }}
                 >
                   {product.badge}
                 </span>
               )}
               <div className="absolute bottom-2 right-2">
-                <CiShoppingCart className="text-3xl text-gray-600 hover:text-white hover:bg-primary rounded-full p-1 cursor-pointer transition-colors" />
+                <MdOutlineShoppingCart className="text-3xl text-black hover:text-white hover:bg-primary rounded-full p-1 cursor-pointer transition-colors" />
               </div>
             </div>
           ))}

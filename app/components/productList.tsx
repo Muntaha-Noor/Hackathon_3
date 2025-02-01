@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import { CiShoppingCart } from "react-icons/ci";
-import Link from "next/link"; 
+import Link from "next/link";
 import { client } from "@/sanity/lib/client";
 
 interface Product {
@@ -13,7 +13,7 @@ interface Product {
   imageUrl: string;
   label?: string;
   labelColor?: string;
-  slug: { current: string }; 
+  slug: { current: string };
 }
 
 const ProductList: React.FC = () => {
@@ -55,14 +55,8 @@ const ProductList: React.FC = () => {
         </h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
           {products.map((product) => (
-            <Link
-              key={product._id}
-              href={`/product/${product.slug.current}`} 
-            >
-              <div
-                className="relative bg-white rounded-lg shadow-md p-4 hover:shadow-lg transition-shadow border border-gray-200"
-              >
-
+            <Link key={product._id} href={`/product/${product.slug.current}`}>
+              <div className="relative bg-white rounded-lg shadow-md p-4 hover:shadow-lg transition-shadow border border-gray-200">
                 {product.label && (
                   <span
                     className={`absolute top-4 left-4 text-white text-sm font-semibold px-3 py-1 rounded-full ${product.labelColor}`}

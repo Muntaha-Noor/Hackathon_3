@@ -10,27 +10,33 @@ type Question = {
 const faqs: Question[] = [
   {
     question: "What types of chairs do you offer?",
-    answer: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Nihil nobis deserunt eveniet explicabo molestias eaque.",
+    answer:
+      "Lorem ipsum dolor sit amet consectetur adipisicing elit. Nihil nobis deserunt eveniet explicabo molestias eaque.",
   },
   {
     question: "Do your chairs come with a warranty?",
-    answer: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Nihil nobis deserunt eveniet explicabo molestias eaque.",
+    answer:
+      "Lorem ipsum dolor sit amet consectetur adipisicing elit. Nihil nobis deserunt eveniet explicabo molestias eaque.",
   },
   {
     question: "Can I try a chair before purchasing?",
-    answer: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Nihil nobis deserunt eveniet explicabo molestias eaque.",
+    answer:
+      "Lorem ipsum dolor sit amet consectetur adipisicing elit. Nihil nobis deserunt eveniet explicabo molestias eaque.",
   },
   {
     question: "How can we get in touch with you?",
-    answer: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Nihil nobis deserunt eveniet explicabo molestias eaque.",
+    answer:
+      "Lorem ipsum dolor sit amet consectetur adipisicing elit. Nihil nobis deserunt eveniet explicabo molestias eaque.",
   },
   {
     question: "What will be delivered? And when?",
-    answer: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Nihil nobis deserunt eveniet explicabo molestias eaque.",
+    answer:
+      "Lorem ipsum dolor sit amet consectetur adipisicing elit. Nihil nobis deserunt eveniet explicabo molestias eaque.",
   },
   {
     question: "How do I clean and maintain my Comfortly chair?",
-    answer: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Nihil nobis deserunt eveniet explicabo molestias eaque.",
+    answer:
+      "Lorem ipsum dolor sit amet consectetur adipisicing elit. Nihil nobis deserunt eveniet explicabo molestias eaque.",
   },
 ];
 
@@ -44,9 +50,12 @@ const FAQSection: FC = () => {
   return (
     <section className="p-8 bg-gray-50">
       <div className="max-w-4xl mx-auto text-center">
-        <h2 className="text-2xl font-semibold text-gray-800">Questions Looks Here</h2>
+        <h2 className="text-2xl font-semibold text-gray-800">
+          Questions Looks Here
+        </h2>
         <p className="text-gray-600 mt-2">
-          Lorem ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the.
+          Lorem ipsum is simply dummy text of the printing and typesetting
+          industry. Lorem Ipsum has been the.
         </p>
       </div>
       <div className="mt-8 max-w-4xl mx-auto grid grid-cols-1 sm:grid-cols-2 gap-6">
@@ -59,13 +68,17 @@ const FAQSection: FC = () => {
               className="flex justify-between items-center cursor-pointer"
               onClick={() => toggleAnswer(index)}
             >
-              <h3 className="text-lg sm:text-xl font-medium text-gray-800">{faq.question}</h3>
+              <h3 className="text-lg sm:text-xl font-medium text-gray-800">
+                {faq.question}
+              </h3>
               <button className="text-gray-600">
                 {activeIndex === index ? <FaMinus /> : <FaPlus />}
               </button>
             </div>
             {activeIndex === index && (
-              <p className="text-sm sm:text-base text-gray-600 mt-2">{faq.answer}</p>
+              <p className="text-sm sm:text-base text-gray-600 mt-2">
+                {faq.answer}
+              </p>
             )}
           </div>
         ))}

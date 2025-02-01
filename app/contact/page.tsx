@@ -6,10 +6,13 @@ export default function ContactPage() {
   return (
     <div className="px-4 lg:px-[150px] mx-auto">
       <div className="p-6 lg:p-12">
-        <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-center mb-4">Get In Touch With Us</h1>
+        <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-center mb-4">
+          Get In Touch With Us
+        </h1>
         <p className="text-center text-gray-500 max-w-2xl mx-auto mb-8">
-          For more information about our products & services, please feel free to reach us.
-          Just Email, Call, Visit, or Simply fill out the form below. Our team will assist you!
+          For more information about our products & services, please feel free
+          to reach us. Just Email, Call, Visit, or Simply fill out the form
+          below. Our team will assist you!
         </p>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12">
@@ -45,7 +48,9 @@ export default function ContactPage() {
 
           <form className="space-y-6">
             <div>
-              <label htmlFor="name" className="sr-only">Your name</label>
+              <label htmlFor="name" className="sr-only">
+                Your name
+              </label>
               <input
                 id="name"
                 type="text"
@@ -54,7 +59,9 @@ export default function ContactPage() {
               />
             </div>
             <div>
-              <label htmlFor="email" className="sr-only">Email address</label>
+              <label htmlFor="email" className="sr-only">
+                Email address
+              </label>
               <input
                 id="email"
                 type="email"
@@ -63,7 +70,9 @@ export default function ContactPage() {
               />
             </div>
             <div>
-              <label htmlFor="subject" className="sr-only">Subject</label>
+              <label htmlFor="subject" className="sr-only">
+                Subject
+              </label>
               <input
                 id="subject"
                 type="text"
@@ -72,7 +81,9 @@ export default function ContactPage() {
               />
             </div>
             <div>
-              <label htmlFor="message" className="sr-only">Message</label>
+              <label htmlFor="message" className="sr-only">
+                Message
+              </label>
               <textarea
                 id="message"
                 placeholder="Message"
@@ -94,7 +105,9 @@ export default function ContactPage() {
         <div className="flex items-center space-x-4 max-w-xs mx-auto">
           <FaTrophy className="w-8 h-8 text-gray-700" />
           <div>
-            <h3 className="text-lg font-semibold text-gray-800">High Quality</h3>
+            <h3 className="text-lg font-semibold text-gray-800">
+              High Quality
+            </h3>
             <p className="text-sm text-gray-600">crafted from top materials</p>
           </div>
         </div>
@@ -102,7 +115,9 @@ export default function ContactPage() {
         <div className="flex items-center space-x-4 max-w-xs mx-auto">
           <FaCheckCircle className="w-8 h-8 text-gray-700" />
           <div>
-            <h3 className="text-lg font-semibold text-gray-800">Warranty Protection</h3>
+            <h3 className="text-lg font-semibold text-gray-800">
+              Warranty Protection
+            </h3>
             <p className="text-sm text-gray-600">Over 2 years</p>
           </div>
         </div>
@@ -110,7 +125,9 @@ export default function ContactPage() {
         <div className="flex items-center space-x-4 max-w-xs mx-auto">
           <FaHeadset className="w-8 h-8 text-gray-700" />
           <div>
-            <h3 className="text-lg font-semibold text-gray-800">24 / 7 Support</h3>
+            <h3 className="text-lg font-semibold text-gray-800">
+              24 / 7 Support
+            </h3>
             <p className="text-sm text-gray-600">Dedicated support</p>
           </div>
         </div>

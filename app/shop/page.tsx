@@ -23,19 +23,23 @@ const LibraryStool: React.FC = () => {
             />
           </div>
           <div className="w-full md:w-1/2 md:ml-6 flex flex-col justify-between">
-            <h1 className="text-2xl font-semibold text-gray-800">Library Stool Chair</h1>
+            <h1 className="text-2xl font-semibold text-gray-800">
+              Library Stool Chair
+            </h1>
             <p className="text-lg text-white p-2 bg-primary w-32 rounded-lg font-semibold mt-2">
               $20.00 USD
             </p>
             <div className="border-t-2 border-gray-200 mb-4 mt-4" />
             <p className="text-gray-600">
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam tincidunt erat enim.
+              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam
+              tincidunt erat enim.
             </p>
             <button
               className="mt-6 bg-primary hover:bg-teal-600 flex items-center text-white py-2 w-40 px-4 rounded-lg"
               onClick={() => router.push("/card")}
             >
-            <CiShoppingCart className="text-white text-3xl pr-2" />  Add To Cart
+              <CiShoppingCart className="text-white text-3xl pr-2" /> Add To
+              Cart
             </button>
           </div>
         </div>

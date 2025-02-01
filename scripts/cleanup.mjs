@@ -3,22 +3,24 @@ import "dotenv/config";
 import { createClient } from "@sanity/client";
 
 const {
-  NEXT_PUBLIC_SANITY_PROJECT_ID, 
-  NEXT_PUBLIC_SANITY_DATASET, 
+  NEXT_PUBLIC_SANITY_PROJECT_ID,
+  NEXT_PUBLIC_SANITY_DATASET,
   NEXT_PUBLIC_SANITY_AUTH_TOKEN,
 } = process.env;
 
 if (!NEXT_PUBLIC_SANITY_PROJECT_ID || !NEXT_PUBLIC_SANITY_AUTH_TOKEN) {
-  console.error("Missing required environment variables. Please check your .env.local file.");
-  process.exit(1); 
+  console.error(
+    "Missing required environment variables. Please check your .env.local file.",
+  );
+  process.exit(1);
 }
 
 const targetClient = createClient({
-  projectId: NEXT_PUBLIC_SANITY_PROJECT_ID, 
-  dataset: NEXT_PUBLIC_SANITY_DATASET || "production", 
-  useCdn: false, 
-  apiVersion: "2023-01-01", 
-  token: NEXT_PUBLIC_SANITY_AUTH_TOKEN, 
+  projectId: NEXT_PUBLIC_SANITY_PROJECT_ID,
+  dataset: NEXT_PUBLIC_SANITY_DATASET || "production",
+  useCdn: false,
+  apiVersion: "2023-01-01",
+  token: NEXT_PUBLIC_SANITY_AUTH_TOKEN,
 });
 
 async function deleteDocumentsByType(documentType) {
@@ -38,9 +40,14 @@ async function deleteDocumentsByType(documentType) {
       console.log(`Deleted document: ${doc._id} (${doc.title || "No Title"})`);
     }
 
-    console.log(`All documents of type "${documentType}" deleted successfully.`);
+    console.log(
+      `All documents of type "${documentType}" deleted successfully.`,
+    );
   } catch (error) {
-    console.error(`Error deleting documents of type "${documentType}":`, error.message);
+    console.error(
+      `Error deleting documents of type "${documentType}":`,
+      error.message,
+    );
   }
 }
 

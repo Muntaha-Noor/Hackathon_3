@@ -1,5 +1,5 @@
-import React from 'react';
-import Image from 'next/image';
+import React from "react";
+import Image from "next/image";
 
 type Logo = {
   src: string;
@@ -8,30 +8,29 @@ type Logo = {
 
 const LogoSection: React.FC = () => {
   const logos: Logo[] = [
-    { src: '/Logo1.png', alt: 'Logo 1' },
-    { src: '/Logo2.png', alt: 'Logo 2' },
-    { src: '/Logo3.png', alt: 'Logo 3' },
-    { src: '/Logo4.png', alt: 'Logo 4' },
-    { src: '/Logo5.png', alt: 'Logo 5' },
-    { src: '/Logo6.png', alt: 'Logo 6' },
-    { src: '/Logo7.png', alt: 'Logo 7' },
+    { src: "/Logo1.png", alt: "Logo 1" },
+    { src: "/Logo2.png", alt: "Logo 2" },
+    { src: "/Logo3.png", alt: "Logo 3" },
+    { src: "/Logo4.png", alt: "Logo 4" },
+    { src: "/Logo5.png", alt: "Logo 5" },
+    { src: "/Logo6.png", alt: "Logo 6" },
+    { src: "/Logo7.png", alt: "Logo 7" },
   ];
 
   return (
-    <div className="px-4 lg:px-[100px] py-6 ml-20 mr-20">
-      <div className="flex flex-wrap justify-center sm:justify-between items-center gap-4">
+    <div className="px-6 lg:px-24 py-8">
+      <div className="grid grid-cols-2 gap-6 items-center sm:grid-cols-3 md:grid-cols-4 lg:flex lg:justify-center lg:gap-10">
         {logos.map((logo, index) => (
           <div
             key={index}
-            className="h-16 w-24 flex-shrink-0 sm:h-20 sm:w-28 md:h-24 md:w-32 lg:h-16 lg:w-24"
+            className="flex justify-center items-center h-20 w-28 sm:h-24 sm:w-32 md:h-28 md:w-36 lg:h-24 lg:w-32"
           >
             <Image
               src={logo.src}
               alt={logo.alt}
-              layout="responsive"
               width={100}
               height={100}
-              objectFit="contain"
+              className="object-contain"
             />
           </div>
         ))}

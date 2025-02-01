@@ -46,25 +46,6 @@
 //   );
 // }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
@@ -96,26 +77,22 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-
     <html lang="en">
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <Providers>
+          <Topbar />
+          <Header />
+          <div className="block md:hidden">
+            <SearchBar />
+          </div>
+          <Navbar />
+          {children}
 
-    <Topbar />
-        <Header />
-        <div className="block md:hidden">
-        <SearchBar />
-        </div>
-        <Navbar />
-        {children}
-
-        <Footer />
-
-      </Providers>
-
-        </body>
+          <Footer />
+        </Providers>
+      </body>
     </html>
   );
 }

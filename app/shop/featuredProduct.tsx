@@ -1,14 +1,14 @@
 import Image from "next/image";
 import React, { useEffect, useState } from "react";
-import { client } from "@/sanity/lib/client"; 
-import Link from "next/link"; 
+import { client } from "@/sanity/lib/client";
+import Link from "next/link";
 
 interface Product {
   _id: string;
   title: string;
   price: number;
   imageUrl: string;
-  slug: string; 
+  slug: string;
 }
 
 const FeaturedProduct: React.FC = () => {

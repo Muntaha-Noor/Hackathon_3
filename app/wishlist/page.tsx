@@ -1,31 +1,27 @@
 "use client";
 import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "@/app/store/store";
-import { removeFromCart } from "@/app/store/slices/CartSlice";
+import { removeFromWishlist } from "@/app/store/slices/WishlistSlice";
 import Image from "next/image";
 import { FaHeart, FaTrash } from "react-icons/fa";
 import Swal from "sweetalert2";
 
-interface CartItem {
+interface WishlistItem {
   id: string;
   title: string;
   price: number;
   imageUrl?: string;
-  size: string | undefined;
-  color: string | undefined;
-  quantity: number;
 }
 
-const Cart = () => {
-  const cartItems = useSelector((state: RootState) => state.cart.cartItems);
+const Wishlist = () => {
+  const wishlistItems = useSelector(
+    (state: RootState) => state.wishlist.wishlistItems,
+  );
   const dispatch = useDispatch();
 
-  const subtotal = cartItems.reduce(
-    (total, item) => total + item.price * item.quantity,
-    0,
-  );
+  const subtotal = wishlistItems.reduce((total, item) => total + item.price, 0);
 
-  const handleRemove = (item: CartItem) => {
+  const handleRemove = (item: WishlistItem) => {
     Swal.fire({
       title: "Are you sure?",
       text: "You won't be able to revert this!",
@@ -36,13 +32,7 @@ const Cart = () => {
       confirmButtonText: "Yes, delete it!",
     }).then((result: { isConfirmed: boolean }) => {
       if (result.isConfirmed) {
-        dispatch(
-          removeFromCart({
-            id: item.id,
-            size: item.size ?? "",
-            color: item.color ?? "",
-          }),
-        );
+        dispatch(removeFromWishlist({ id: item.id }));
         Swal.fire("Deleted!", "Your item has been removed.", "success");
       }
     });
@@ -52,14 +42,14 @@ const Cart = () => {
     <div className="px-4 lg:px-[150px] mx-auto">
       <div className="flex flex-col lg:flex-row justify-between p-6 gap-8">
         <div className="flex-1">
-          <h1 className="text-2xl font-bold mb-4">Bag</h1>
-          {cartItems.length === 0 ? (
-            <p className="text-gray-500">Your cart is empty.</p>
+          <h1 className="text-2xl font-bold mb-4">Wishlist</h1>
+          {wishlistItems.length === 0 ? (
+            <p className="text-gray-500">Your wishlist is empty.</p>
           ) : (
-            cartItems.map((item) => (
+            wishlistItems.map((item) => (
               <div
-                key={item.id + item.size + item.color}
-                className="flex flex-col sm:flex-row items-start sm:items-center justify-between border-b border-gray-200 py-4"
+                key={item.id}
+                className="flex items-center justify-between border-b border-gray-200 py-4"
               >
                 <div className="flex items-center gap-4 flex-1">
                   <div className="w-20 h-20 relative">
@@ -73,32 +63,21 @@ const Cart = () => {
                   </div>
                   <div>
                     <h2 className="text-lg font-semibold">{item.title}</h2>
-                    <div className="flex flex-wrap sm:flex-nowrap gap-4 mt-1">
-                      <p className="text-gray-500">Size: {item.size}</p>
-                      <div className="flex items-center gap-2">
-                        <p className="text-gray-500">Color:</p>
-                        <div
-                          className="w-5 h-5 rounded-full border"
-                          style={{ backgroundColor: item.color }}
-                        />
-                      </div>
+                    <div className="flex items-center gap-4 mt-2">
+                      <p className="text-black font-bold">
+                        ${item.price.toFixed(2)}
+                      </p>
                     </div>
-                    <div className="flex flex-wrap sm:flex-nowrap items-center gap-4 mt-2">
-                      <p className="text-gray-500">Quantity: {item.quantity}</p>
-                      <div className="flex gap-2">
-                        <button>
-                          <FaHeart className="text-black hover:text-red-500" />
-                        </button>
-                        <button onClick={() => handleRemove(item as CartItem)}>
-                          <FaTrash className="text-black hover:text-red-500" />
-                        </button>
-                      </div>
+                    <div className="flex items-center gap-4 mt-2">
+                      <button onClick={() => handleRemove(item)}>
+                        <FaTrash className="text-black hover:text-red-500" />
+                      </button>
+                      <button>
+                        <FaHeart className="text-black hover:text-red-500" />
+                      </button>
                     </div>
                   </div>
                 </div>
-                <p className="text-lg font-bold sm:ml-auto mt-2 sm:mt-0">
-                  ${item.price.toFixed(2)}
-                </p>
               </div>
             ))
           )}
@@ -129,4 +108,4 @@ const Cart = () => {
   );
 };
 
-export default Cart;
+export default Wishlist;

@@ -11,4 +11,4 @@ interface ProductType {
   colors: string[];
 }
 
-  declare module 'sweetalert2';
+declare module "sweetalert2";

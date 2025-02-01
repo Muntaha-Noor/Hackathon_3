@@ -41,7 +41,7 @@ const SearchBar: React.FC = () => {
       const data: Product[] = await client.fetch(query);
 
       const filteredResults = data.filter((product) =>
-        product.title.toLowerCase().includes(debouncedSearchTerm.toLowerCase())
+        product.title.toLowerCase().includes(debouncedSearchTerm.toLowerCase()),
       );
 
       setResults(filteredResults);
@@ -71,10 +71,10 @@ const SearchBar: React.FC = () => {
   };
 
   return (
-    <div className="w-full max-w-2xl mx-auto relative"> 
+    <div className="w-full max-w-2xl mx-auto relative px-4 sm:px-6">
       <div className="flex items-center border border-gray-300 rounded-lg overflow-hidden focus-within:border-gray-500">
-        <span className="px-3 text-gray-800 flex items-center"> 
-          <IoSearch className="h-5 w-5" /> 
+        <span className="px-3 text-gray-800 flex items-center">
+          <IoSearch className="h-5 w-5" />
         </span>
         <input
           type="text"
@@ -87,9 +87,7 @@ const SearchBar: React.FC = () => {
         />
         <button
           className="bg-gray-700 text-white px-4 py-2 hover:bg-gray-800"
-          onClick={() =>
-            searchTerm && handleSearchSubmit(debouncedSearchTerm)
-          }
+          onClick={() => searchTerm && handleSearchSubmit(debouncedSearchTerm)}
         >
           Search
         </button>

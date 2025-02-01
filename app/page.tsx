@@ -1,4 +1,4 @@
-import './globals.css';
+import "./globals.css";
 import TopCategories from "./categories/page";
 import FeaturedProducts from "./components/featuredProduct";
 import Hero from "./components/hero";
@@ -9,12 +9,12 @@ import ProductStyle from "./components/productStyle";
 export default function Home() {
   return (
     <div>
-      <Hero/>
+      <Hero />
       <LogoSection />
       <FeaturedProducts />
       <TopCategories />
       <ProductStyle />
       <ProductList />
-      </div>
+    </div>
   );
 }

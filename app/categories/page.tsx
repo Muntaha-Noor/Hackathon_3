@@ -1,13 +1,13 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import Image from "next/image";
-import Link from "next/link";  
+import Link from "next/link";
 import { client } from "@/sanity/lib/client";
 
 interface Category {
   _id: string;
   title: string;
-  slug: { current: string };  
+  slug: { current: string };
   imageUrl: string;
   products: number;
 }
@@ -55,9 +55,7 @@ const TopCategories: React.FC = () => {
 
               <div className="p-4 text-center">
                 <h3 className="text-lg font-medium">{category.title}</h3>
-                <p className="text-gray-500">
-                  {category.products} Products
-                </p>
+                <p className="text-gray-500">{category.products} Products</p>
               </div>
             </div>
           ))

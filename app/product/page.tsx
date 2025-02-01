@@ -1,7 +1,7 @@
 "use client";
 import React, { useState, useEffect } from "react";
 import Image from "next/image";
-import { CiShoppingCart } from "react-icons/ci";
+import { MdOutlineShoppingCart } from "react-icons/md";
 import { client } from "@/sanity/lib/client";
 import ProductSection from "./productSection";
 import Link from "next/link";
@@ -19,8 +19,8 @@ interface Product {
 
 const Product: React.FC = () => {
   const [products, setProducts] = useState<Product[]>([]);
-  const [currentPage, setCurrentPage] = useState(1); // Current page number
-  const [productsPerPage] = useState(8); // Number of products per page
+  const [currentPage, setCurrentPage] = useState(1);
+  const [productsPerPage] = useState(8);
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -48,10 +48,12 @@ const Product: React.FC = () => {
     fetchProducts();
   }, []);
 
-  // Pagination logic
   const indexOfLastProduct = currentPage * productsPerPage;
   const indexOfFirstProduct = indexOfLastProduct - productsPerPage;
-  const currentProducts = products.slice(indexOfFirstProduct, indexOfLastProduct);
+  const currentProducts = products.slice(
+    indexOfFirstProduct,
+    indexOfLastProduct,
+  );
 
   const totalPages = Math.ceil(products.length / productsPerPage);
 
@@ -72,7 +74,9 @@ const Product: React.FC = () => {
   return (
     <div className="px-4 lg:px-[150px] mx-auto">
       <div className="sm:px-6 md:px-8 py-12 mx-auto">
-        <h2 className="text-center text-2xl font-semibold mb-8">All Products</h2>
+        <h2 className="text-center text-2xl font-semibold mb-8">
+          All Products
+        </h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-4 gap-6">
           {currentProducts.map((product) => (
             <div
@@ -100,7 +104,9 @@ const Product: React.FC = () => {
               <div className="mt-4 flex justify-between items-center">
                 <div>
                   <Link href={`/product/${product.slug.current}`} passHref>
-                    <h3 className="text-gray-800 text-lg font-medium">{product.title}</h3>
+                    <h3 className="text-gray-800 text-lg font-medium">
+                      {product.title}
+                    </h3>
                   </Link>
 
                   <div className="flex items-center mt-1">
@@ -115,14 +121,13 @@ const Product: React.FC = () => {
                   </div>
                 </div>
                 <div className="pb-2">
-                  <CiShoppingCart className="hover:text-white hover:bg-primary text-black font-semibold text-3xl rounded cursor-pointer transition-colors" />
+                  <MdOutlineShoppingCart className="hover:text-white hover:bg-primary text-black font-semibold text-3xl rounded cursor-pointer transition-colors" />
                 </div>
               </div>
             </div>
           ))}
         </div>
 
-        {/* Pagination Controls */}
         <div className="flex justify-center mt-8 space-x-4">
           <button
             onClick={handlePreviousPage}

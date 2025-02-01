@@ -32,7 +32,7 @@ export const categorySchema = defineType({
         maxLength: 200,
         slugify: (input) =>
           `${input.toLowerCase().replace(/\s+/g, "-")}-${Math.floor(
-            Math.random() * 100000
+            Math.random() * 100000,
           )}`,
       },
     },

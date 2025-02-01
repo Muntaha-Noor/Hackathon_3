@@ -2,7 +2,7 @@
 import Image from "next/image";
 import React, { useState, useEffect } from "react";
 import { client } from "@/sanity/lib/client";
-import Link from "next/link"; 
+import Link from "next/link";
 
 interface Product {
   _id: string;
