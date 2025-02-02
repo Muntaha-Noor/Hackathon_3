@@ -1,4 +1,5 @@
 "use client";
+import { useUser, useClerk } from "@clerk/nextjs";
 import React, { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import { client } from "@/sanity/lib/client";
@@ -26,6 +27,8 @@ interface Product {
 }
 
 const ProductDetail: React.FC = () => {
+  const { user } = useUser(); 
+  const { openSignIn } = useClerk();
   const params = useParams();
   const { slug } = params as { slug: string };
   const dispatch = useDispatch();
@@ -64,6 +67,11 @@ const ProductDetail: React.FC = () => {
   };
 
   const handleAddToCart = () => {
+    if (!user) {
+    openSignIn(); 
+    return;
+    }
+
     if (!product) return;
 
     if (!selectedSize || !selectedColor) {
@@ -126,6 +134,11 @@ const ProductDetail: React.FC = () => {
   };
 
   const handleWishlistToggle = () => {
+    if (!user) {
+      openSignIn(); 
+      return;
+      }
+
     if (product) {
       const isInWishlist = wishlistItems.some(
         (item) => item.id === product._id,

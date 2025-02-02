@@ -6,13 +6,14 @@ import SearchBar from "./SearchBar";
 import { useSelector } from "react-redux";
 import { RootState } from "@/app/store/store";
 import Link from "next/link";
+import { SignedIn, SignedOut, SignInButton, UserButton } from "@clerk/nextjs";
 
 const Header = () => {
   const cartCount = useSelector(
-    (state: RootState) => state.cart.cartItems.length,
+    (state: RootState) => state.cart.cartItems.length
   );
   const wishlistCount = useSelector(
-    (state: RootState) => state.wishlist.wishlistItems.length,
+    (state: RootState) => state.wishlist.wishlistItems.length
   );
 
   return (
@@ -29,22 +30,6 @@ const Header = () => {
             />
             <span className="text-2xl sm:text-3xl md:text-4xl">Comforty</span>
           </a>
-
-          <div className="flex items-center gap-3 sm:hidden">
-            <Link href="/wishlist" className="flex items-center gap-1">
-              <FaRegHeart className="h-5 w-5" />
-              <span className="bg-primary text-white p-1 rounded-full h-5 w-5 flex items-center justify-center text-xs">
-                {wishlistCount}
-              </span>
-            </Link>
-
-            <Link href="/card" className="flex items-center gap-1">
-              <MdOutlineShoppingCart className="h-5 w-5" />
-              <span className="bg-primary text-white p-1 rounded-full h-5 w-5 flex items-center justify-center text-xs">
-                {cartCount}
-              </span>
-            </Link>
-          </div>
         </div>
 
         <div className="hidden sm:block">
@@ -52,19 +37,27 @@ const Header = () => {
         </div>
 
         <div className="hidden sm:flex items-center gap-3 bg-white p-2 sm:p-3 md:px-6 lg:px-8 rounded-xl">
-          <Link href="/wishlist" className="flex items-center gap-1">
-            <FaRegHeart className="h-6 w-6" />
-            <span className="bg-primary text-white p-1 rounded-full h-6 w-6 flex items-center justify-center text-sm">
-              {wishlistCount}
-            </span>
-          </Link>
+          <SignedIn>
+            <Link href="/wishlist" className="flex items-center gap-1">
+              <FaRegHeart className="h-6 w-6" />
+              <span className="bg-primary text-white p-1 rounded-full h-6 w-6 flex items-center justify-center text-sm">
+                {wishlistCount}
+              </span>
+            </Link>
 
-          <Link href="/card" className="flex items-center gap-1">
-            <MdOutlineShoppingCart className="h-6 w-6" />
-            <span className="bg-primary text-white p-1 rounded-full h-6 w-6 flex items-center justify-center text-sm">
-              {cartCount}
-            </span>
-          </Link>
+            <Link href="/card" className="flex items-center gap-1">
+              <MdOutlineShoppingCart className="h-6 w-6" />
+              <span className="bg-primary text-white p-1 rounded-full h-6 w-6 flex items-center justify-center text-sm">
+                {cartCount}
+              </span>
+            </Link>
+
+            <UserButton />
+          </SignedIn>
+
+          <SignedOut>
+            <SignInButton />
+          </SignedOut>
         </div>
       </div>
     </header>
