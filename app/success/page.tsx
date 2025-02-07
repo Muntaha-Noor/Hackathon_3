@@ -1,7 +1,8 @@
-"use client";
+"use client"; 
+
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, Suspense } from "react";
 
 interface SessionData {
   id: string;
@@ -10,7 +11,7 @@ interface SessionData {
   status: string;
 }
 
-export default function SuccessPage() {
+function SuccessContent() {
   const searchParams = useSearchParams();
   const sessionId = searchParams.get("session_id");
 
@@ -37,7 +38,7 @@ export default function SuccessPage() {
       {loading ? (
         <h2 className="text-2xl font-bold text-green-700">Processing...</h2>
       ) : (
-        <div className="text-center flex flex-col items-center gap-4"> 
+        <div className="text-center flex flex-col items-center gap-4">
           <h1 className="text-4xl font-bold text-green-700">Payment Successful! 🎉</h1>
           <p className="text-xl mt-4">Thank you for your purchase.</p>
           {session && <p className="text-md mt-2">Order ID: {session.id}</p>}
@@ -51,5 +52,13 @@ export default function SuccessPage() {
         </div>
       )}
     </div>
+  );
+}
+
+export default function SuccessPage() {
+  return (
+    <Suspense fallback={<h2 className="text-center text-2xl text-green-700">Loading...</h2>}>
+      <SuccessContent />
+    </Suspense>
   );
 }
