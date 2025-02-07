@@ -36,7 +36,7 @@ const Header = () => {
           <SearchBar />
         </div>
 
-        <div className="hidden sm:flex items-center gap-3 bg-white p-2 sm:p-3 md:px-6 lg:px-8 rounded-xl">
+        <div className="flex items-center gap-3 bg-white p-2 sm:p-3 md:px-6 lg:px-8 rounded-xl">
           <SignedIn>
             <Link href="/wishlist" className="flex items-center gap-1">
               <FaRegHeart className="h-6 w-6" />
@@ -56,7 +56,9 @@ const Header = () => {
           </SignedIn>
 
           <SignedOut>
+            <div className="flex items-center justify-center whitespace-nowrap">
             <SignInButton />
+            </div>
           </SignedOut>
         </div>
       </div>
